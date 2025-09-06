@@ -1,86 +1,79 @@
-import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import { useCustomTheme } from '@/contexts/themeContext';
+import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-const options = [
-  { key: 'amistad', icon: 'people', label: 'Amistad' },
-  { key: 'citas', icon: 'heart', label: 'Citas' },
-  { key: 'relacion', icon: 'infinite', label: 'Relación' },
+const amistadIcon =  require('../assets/images/amistadIcon.png');
+const relacionIcon = require('@/assets/images/relacionIcon.png');
+const citasIcon = require('@/assets/images/citasIcon.png');
+
+type SearchType = 'amistad' | 'relacion' | 'citas';
+
+const filters: { type: SearchType; label: string; icon: any }[] = [
+  { type: 'amistad', label: 'Amistad', icon: amistadIcon },
+  { type: 'citas', label: 'Citas', icon: citasIcon },
+  { type: 'relacion', label: 'Relación', icon: relacionIcon },
 ];
 
-interface Props {
-  onSelect: (type: 'amistad' | 'citas' | 'relacion') => void;
-}
-
-export default function TypeSearch({ onSelect }: Props) {
-  const [selected, setSelected] = useState<'amistad' | 'citas' | 'relacion'>('amistad');
-
-  const handleSelect = (key: 'amistad' | 'citas' | 'relacion') => {
-    setSelected(key);
-    onSelect(key); // Avisamos al padre (index.tsx)
-  };
+export default function TopFilters() {
+  const { searchType, setSearchType } = useCustomTheme();
 
   return (
-    <View style={styles.card}>
-      {/* Botones superiores */}
-      <View style={styles.topButtons}>
-        {options.map((option) => (
-          <TouchableOpacity
-            key={option.key}
-            style={styles.circleButton}
-            onPress={() => handleSelect(option.key as any)}
-          >
-            <Ionicons
-              name={option.icon as any}
-              size={24}
-              color={selected === option.key ? '#fff' : 'rgba(255,255,255,0.6)'}
-              style={{ marginBottom: 4 }}
-            />
-            {selected === option.key && (
-              <Text style={styles.buttonText}>{option.label}</Text>
-            )}
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      {/* Imagen de perfil */}
-      <Image
-        source={{ uri: 'https://i.pravatar.cc/300' }}
-        style={styles.image}
-        resizeMode="cover"
-      />
+    <View style={styles.container}>
+      {filters.map((filter) => {
+        const selected = filter.type === searchType;
+        return (
+          <View key={filter.type} style={{ display:"flex", flexDirection:"column",  alignItems:"center" }}>
+            <View style={{
+              padding: 2,
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 100,
+              borderWidth: selected ? 1 : 0,
+              borderColor: selected ? '#e89aae' : 'transparent',
+            }}>
+              <TouchableOpacity
+                key={filter.type}
+                style={[
+                  styles.filterButton,
+                  { opacity: selected ? 1 : 0.5 },
+                ]}
+                onPress={() => setSearchType(filter.type)}
+              >
+                <Image source={filter.icon} style={styles.icon} resizeMode="contain" />
+              </TouchableOpacity>
+            </View>
+            {selected && <Text style={styles.label}>{filter.label}</Text>}
+          </View>
+        );
+      })}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    overflow: 'hidden',
-    marginHorizontal: 20,
-    marginTop: 20,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 5,
-  },
-  topButtons: {
+  container: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    paddingVertical: 12,
-    backgroundColor: 'rgba(0,0,0,0.2)',
-  },
-  circleButton: {
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 12,
-    marginTop: 2,
-  },
-  image: {
+    paddingVertical: 10,
     width: '100%',
-    height: 400,
+  },
+  filterButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 50,
+    padding: 10,
+    width: 60,
+    height: 60,
+    backgroundColor: '#fff',
+  },
+  icon: {
+    width: 35,
+    height: 35,
+  },
+  label: {
+    marginTop: 2,
+    fontSize: 12,
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });

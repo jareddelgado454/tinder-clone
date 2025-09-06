@@ -1,10 +1,10 @@
 'use client';
 
-import Buttons from '@/components/Buttons';
-import Card from '@/components/Card';
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
-import { useState } from 'react';
+import CardStack from '@/components/stackCards';
+import { useCustomTheme } from '@/contexts/themeContext';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -15,9 +15,9 @@ import Animated, {
 const { width } = Dimensions.get('window');
 
 export default function IndexPage() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isMenuOpen, setIsMenuOpen, gradientColors } = useCustomTheme();
 
-  // Animación del desplazamiento de la card
+  // Animación para mover la tarjeta cuando el menú se abre
   const translateX = useSharedValue(0);
 
   const animatedCardStyle = useAnimatedStyle(() => ({
@@ -37,43 +37,37 @@ export default function IndexPage() {
     console.log('Filtros presionados');
   };
 
-  const users = [
-    { name: 'Alice', age: 23, image: require('../assets/images/user1.jpeg') },
-    { name: 'Bob', age: 28, image: require('../assets/images/user2.jpg') },
-    { name: 'Carol', age: 26, image: require('../assets/images/user3.webp') },
-  ];
-
   return (
-    <View style={styles.container}>
-      {/* Fondo lateral */}
-      <View style={styles.sidebarContainer}>
-        <Sidebar />
-      </View>
-
-      {/* Contenido principal */}
-      <Animated.View
-        style={[
-          styles.mainContent,
-          animatedCardStyle,
-          { backgroundColor: isMenuOpen ? '#ffebf0' : '#f2f2f2' },
-        ]}
-      >
-        <Header onMenuPress={handleMenuToggle} onFilterPress={handleFilter} />
-        <View style={styles.cardsContainer}>
-          {users.map((user, index) => (
-            <Card key={index} name={user.name} age={user.age} image={user.image} />
-          ))}
+    <LinearGradient
+      colors={gradientColors}
+      style={styles.container}
+      start={{ x: 0.5, y: 0 }}
+      end={{ x: 0.5, y: 1 }}
+    >
+      {isMenuOpen && (
+        <View style={styles.sidebarContainer}>
+          <Sidebar onMenuPress={handleMenuToggle}/>
         </View>
-        <Buttons onLike={() => console.log('Like')} onDislike={() => console.log('Dislike')} />
+      )}
+
+
+      {/* Contenido principal animado */}
+      <Animated.View style={[styles.mainContent, animatedCardStyle]}>
+        {!isMenuOpen 
+          ? <Header onMenuPress={handleMenuToggle} onFilterPress={handleFilter} />
+          : <View style={{width:"100%", height:80}}></View>
+        }
+        <View style={styles.cardsContainer}>
+          <CardStack />
+        </View>
       </Animated.View>
-    </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffb6c1', // color de fondo visible cuando se abre el menú
     flexDirection: 'row',
   },
   sidebarContainer: {
@@ -84,11 +78,11 @@ const styles = StyleSheet.create({
   },
   mainContent: {
     flex: 1,
-    backgroundColor: '#f2f2f2',
   },
   cardsContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    flexDirection: "column",
+    alignItems: "center",     
+    justifyContent: "flex-start", 
+  }
 });

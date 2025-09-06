@@ -10,10 +10,10 @@ export default function Header({ onMenuPress, onFilterPress }: HeaderProps) {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={onMenuPress}>
-        <Ionicons name="menu" size={28} color="#333" />
+        <Ionicons name="menu" size={28} color="#ffffffff" />
       </TouchableOpacity>
       <TouchableOpacity onPress={onFilterPress}>
-        <Ionicons name="filter" size={26} color="#333" />
+        <Ionicons name="filter" size={26} color="#ffffffff" />
       </TouchableOpacity>
     </View>
   );

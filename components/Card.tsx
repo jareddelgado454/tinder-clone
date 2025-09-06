@@ -2,6 +2,7 @@
 
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import TopFilters from './TypeSearch';
 
 const { width, height } = Dimensions.get('window');
 
@@ -20,6 +21,7 @@ export default function Card({ name, age, image }: CardProps) {
 
   return (
     <Animated.View style={[styles.card, animatedStyle]}>
+      <TopFilters></TopFilters>
       <Image source={image} style={styles.image} />
       <View style={styles.info}>
         <Text style={styles.name}>{name}, {age}</Text>
