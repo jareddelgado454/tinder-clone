@@ -1,7 +1,8 @@
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
+  Animated,
   Dimensions,
   ImageBackground,
   StyleSheet,
@@ -9,12 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Animated, {
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import Choice from './Choice';
 import TopFilters from './TypeSearch';
 
 interface UserCardProps {
@@ -26,72 +22,68 @@ interface UserCardProps {
     location: any;
     type: any;
   };
-  onDislike: () => void;
-  onLike: () => void;
-  onCheck: () => void;
+  swipe : any;
+  tiltSign : any;
+  isFirst : boolean;
 }
 
 const { width } = Dimensions.get('window');
 const ANIMATION_DURATION = 900;
 
-export default function UserCard({ user, onDislike, onLike, onCheck }: UserCardProps) {
-  const translateX = useSharedValue(0);
-  const rotate = useSharedValue(0);
-  const scale = useSharedValue(1);
-  const opacityOverlay = useSharedValue(0);
-  const cardOpacity = useSharedValue(1);
-  const overlayText = useSharedValue('');
+export default function UserCard({ user,
+  tiltSign, swipe, isFirst, ...rest }: UserCardProps) {
 
-  const animateCard = (direction: 'left' | 'right' | 'center') => {
-    if (direction === 'left') {
-      overlayText.value = 'X';
-      cardOpacity.value = withTiming(0.7, { duration: 200 });
-      translateX.value = withTiming(-width, { duration: ANIMATION_DURATION });
-      rotate.value = withTiming(-15, { duration: ANIMATION_DURATION });
-      opacityOverlay.value = withTiming(1, { duration: ANIMATION_DURATION }, () =>
-        runOnJS(onDislike)()
-      );
-    } else if (direction === 'right') {
-      overlayText.value = '✔';
-      cardOpacity.value = withTiming(0.7, { duration: 200 });
-      translateX.value = withTiming(width, { duration: ANIMATION_DURATION });
-      rotate.value = withTiming(15, { duration: ANIMATION_DURATION });
-      opacityOverlay.value = withTiming(1, { duration: ANIMATION_DURATION }, () =>
-        runOnJS(onCheck)()
-      );
-    } else {
-      overlayText.value = 'SUPER LIKE';
-      cardOpacity.value = withTiming(0.7, { duration: 200 });
-      opacityOverlay.value = withTiming(1, { duration: ANIMATION_DURATION }, () =>
-        runOnJS(onLike)()
-      );
-    }
-  };
+  const rotate = swipe && tiltSign
+    ? Animated.multiply(swipe.x, tiltSign).interpolate({
+        inputRange: [-100, 0, 100],
+        outputRange: ['-8deg', '0deg', '8deg'],
+      })
+    : '0deg';
 
-  const cardStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateX: translateX.value },
-      { rotateZ: `${rotate.value}deg` },
-      { scale: scale.value },
-    ],
-    opacity: cardOpacity.value,
-  }));
 
-  const overlayStyle = useAnimatedStyle(() => ({
-    opacity: opacityOverlay.value,
-  }));
+  const checkOpacity = swipe
+    ? swipe.x.interpolate({
+        inputRange: [25, 100],
+        outputRange: [0, 1],
+        extrapolate: 'clamp',
+      })
+    : new Animated.Value(0);
+
+  const noOpacity = swipe
+    ? swipe.x.interpolate({
+        inputRange: [-100, -25],
+        outputRange: [1, 0],
+        extrapolate: 'clamp',
+      })
+    : new Animated.Value(0);
+
+
+  const animatedCardStyle = isFirst && swipe
+  ? { transform: [...swipe.getTranslateTransform(), { rotate }] }
+  : {};
+
+  const renderChoice = useCallback(()=>{
+    return (
+      <>
+        <Animated.View style={[styles.choiceNoContainer, { opacity: noOpacity}]}>
+          <Choice type={"no"}/>
+        </Animated.View>
+        {/* <View style={styles.choiceSuperContainer}>
+          <Choice type={"super"}/>
+        </View> */}
+        <Animated.View style={[styles.choiceCheckContainer, { opacity: checkOpacity }]}>
+          <Choice type={"check"}/>
+        </Animated.View>
+      </>
+    );
+  },[]);
 
   return (
-    <Animated.View style={[styles.cardContainer, cardStyle]}>
+    <Animated.View style={[styles.cardContainer, isFirst && animatedCardStyle]} {...(isFirst ? rest : {})}>
       <ImageBackground source={user.image} style={styles.card} imageStyle={styles.image}>
         <View style={styles.topContainer}>
           <TopFilters />
         </View>
-
-        {/* Overlay grande centrado, NO bloquea toques */}
-        <Animated.View style={[styles.overlay, overlayStyle]} pointerEvents="none">
-          <Text style={styles.overlayText}>{overlayText.value}</Text>
-        </Animated.View>
 
         <View style={styles.bottomContainer}>
           <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -128,27 +120,28 @@ export default function UserCard({ user, onDislike, onLike, onCheck }: UserCardP
           <View style={styles.actionButtons}>
             <TouchableOpacity
               style={[styles.circleButton, { backgroundColor: '#d0bfbf' }]}
-              onPress={() => animateCard('left')}
+              onPress={() => {}}
             >
               <FontAwesome name="times" color="#fff" size={28} />
             </TouchableOpacity>
 
             <TouchableOpacity
               style={[styles.circleButton, { backgroundColor: '#f7ebf0ff' }]}
-              onPress={() => animateCard('center')}
+              onPress={() => {}}
             >
               <FontAwesome name="heart" color="#ff3a8cff" size={28} />
             </TouchableOpacity>
 
             <TouchableOpacity
               style={[styles.circleButton, { backgroundColor: '#feb5db' }]}
-              onPress={() => animateCard('right')}
+              onPress={() => {}}
             >
               <FontAwesome name="check" color="#fff" size={28} />
             </TouchableOpacity>
           </View>
         </View>
       </ImageBackground>
+      {isFirst && renderChoice()}
     </Animated.View>
   );
 }
@@ -161,6 +154,7 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     zIndex: 50,
     backgroundColor: '#ddd',
+    position:"absolute"
   },
   card: {
     flex: 1,
@@ -218,5 +212,35 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 48,
     fontWeight: 'bold',
+  },
+  choiceNoContainer: {
+    position:"absolute",
+    flex:1,
+    width:"100%",
+    height:"100%",
+    borderRadius:40,
+    justifyContent:"center",
+    alignItems:"center",
+    backgroundColor: "rgba(255, 255, 255, 0.4)",
+  },
+  choiceSuperContainer: {
+    position:"absolute",
+    flex:1,
+    width:"100%",
+    height:"100%",
+    borderRadius:40,
+    justifyContent:"center",
+    alignItems:"center",
+    backgroundColor: "rgba(245, 185, 142, 0.4)",
+  },
+  choiceCheckContainer: {
+    position:"absolute",
+    flex:1,
+    width:"100%",
+    height:"100%",
+    borderRadius:40,
+    justifyContent:"center",
+    alignItems:"center",
+    backgroundColor: "rgba(245, 185, 142, 0.4)",
   },
 });

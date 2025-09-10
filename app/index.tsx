@@ -17,7 +17,6 @@ const { width } = Dimensions.get('window');
 export default function IndexPage() {
   const { isMenuOpen, setIsMenuOpen, gradientColors } = useCustomTheme();
 
-  // Animación para mover la tarjeta cuando el menú se abre
   const translateX = useSharedValue(0);
 
   const animatedCardStyle = useAnimatedStyle(() => ({
@@ -50,8 +49,6 @@ export default function IndexPage() {
         </View>
       )}
 
-
-      {/* Contenido principal animado */}
       <Animated.View style={[styles.mainContent, animatedCardStyle]}>
         {!isMenuOpen 
           ? <Header onMenuPress={handleMenuToggle} onFilterPress={handleFilter} />
