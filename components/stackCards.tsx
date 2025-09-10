@@ -1,10 +1,11 @@
 import { usersDating, usersFriends, usersRelationship } from '@/constants/Users';
+import { useModalAction } from '@/contexts/swipeContext';
 import { useCustomTheme } from '@/contexts/themeContext';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Animated,
   Dimensions,
-  PanResponder,
+  Image,
   StyleSheet,
   View
 } from 'react-native';
@@ -13,6 +14,7 @@ import UserCard from './userCard';
 const { width, height } = Dimensions.get('window');
 
 export default function CardStack() {
+  const { action, setAction } = useModalAction();
   const { searchType } = useCustomTheme();
   const [filteredUsers, setFilteredUsers] = useState<any[]>([]);
 
@@ -29,46 +31,11 @@ export default function CardStack() {
   },[filteredUsers.length]);
 
   const swipe = useRef(new Animated.ValueXY()).current;
-  const tiltSign = useRef(new Animated.Value(1)).current;
-
-  const panResponder = PanResponder.create({
-    onMoveShouldSetPanResponder : () => true,
-    onPanResponderMove : (_, {dx, dy, y0}) => {
-      swipe.setValue({ x:dx, y:dy });
-      tiltSign.setValue(y0 > 400 ? 1 : -1);
-    },
-    onPanResponderRelease : (_, {dx, dy}) => {
-
-      const direction = Math.sign(dx);
-      const isActionActive = Math.abs(dx) > 100;
-
-      if(isActionActive){
-        Animated.timing(swipe,{
-          duration: 200,
-          toValue: {
-            x: direction*500,
-            y: dy, 
-          },
-          useNativeDriver : true,
-        }).start(removeTopCard);
-      }else {
-        Animated.spring(swipe, {
-          toValue : {
-            x:0,
-            y:0,
-          },
-          useNativeDriver : true,
-          friction : 5
-        }).start();
-      }
-    }
-  });
 
   const removeTopCard = useCallback(() => {
-    swipe.setValue({ x: 0, y: 0 });
-    tiltSign.setValue(1);
     setFilteredUsers((prev) => prev.slice(1));
-  }, [swipe, tiltSign]);
+    swipe.setValue({ x: 0, y: 0 });
+  }, [swipe]);
 
   useEffect(() => {
     if (searchType === 'citas') {
@@ -80,6 +47,40 @@ export default function CardStack() {
     }
   }, [searchType]);
 
+  const handleActionFromModal = useCallback(() => {
+    if (!action) return;
+
+    if (action === -1) {
+      // Ejecutar swipe "No"
+      Animated.timing(swipe, {
+        toValue: { x: -500, y: 0 },
+        duration: 400,
+        useNativeDriver: true,
+      }).start(() => removeTopCard());
+    } else if (action === 1) {
+      // Ejecutar swipe "Check"
+      Animated.timing(swipe, {
+        toValue: { x: 500, y: 0 },
+        duration: 400,
+        useNativeDriver: true,
+      }).start(() => removeTopCard());
+    } else if (action === "super") {
+      // Ejecutar swipe "Superlike"
+      Animated.timing(swipe, {
+        toValue: { x: 0, y: -500 },
+        duration: 400,
+        useNativeDriver: true,
+      }).start(() => removeTopCard());
+    }
+
+    setAction(null); // limpiar acción
+  }, [action, swipe, removeTopCard, setAction]);
+
+  // Detectamos acción del modal
+  useEffect(() => {
+    handleActionFromModal();
+  }, [action]);
+
   const currentUser = filteredUsers[0];
   const nextUser = filteredUsers[1];
 
@@ -87,7 +88,7 @@ export default function CardStack() {
     <View style={styles.container}>
       {currentUser && (
         <Animated.View style={[styles.card]}>
-           {/* {nextUser && (
+           {nextUser && (
                 <View style={styles.nextCard}>
                 <Image
                     source={nextUser.image}
@@ -95,23 +96,19 @@ export default function CardStack() {
                     resizeMode="cover"
                 />
                 </View>
-            )} */}
+            )}
             {
               filteredUsers.map((user, index) => {
-                console.log("este es el index ", index);
-                const isFirst = index===0;
-                const dragHandlers = isFirst ? panResponder.panHandlers : {};
-                return (
-                  <UserCard
-                    key={user.id}
-                    user={user}
-                    tiltSign={isFirst ? tiltSign : undefined}
-                    swipe={isFirst ? swipe : undefined}
-                    isFirst={isFirst}
-                    {...(isFirst ? dragHandlers : {})}
-                  /> 
-                )
-              }).reverse()
+                      const isFirst = index === 0;
+                      return (
+                        <UserCard
+                          key={user.id}
+                          user={user}
+                          isFirst={isFirst}
+                          onSwipeOff={removeTopCard}
+                        />
+                      );
+                }).reverse()
             }
         </Animated.View>
       )}

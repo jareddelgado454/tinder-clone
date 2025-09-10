@@ -18,7 +18,7 @@ export default function TopFilters() {
   const { searchType, setSearchType } = useCustomTheme();
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} pointerEvents="box-none">
       {filters.map((filter) => {
         const selected = filter.type === searchType;
         return (
@@ -37,7 +37,11 @@ export default function TopFilters() {
                   styles.filterButton,
                   { opacity: selected ? 1 : 0.5 },
                 ]}
-                onPress={() => setSearchType(filter.type)}
+                
+                onPress={() => {
+                  console.log('Presionando:', filter.type);
+                  setSearchType(filter.type); 
+                }}
               >
                 <Image source={filter.icon} style={styles.icon} resizeMode="contain" />
               </TouchableOpacity>
@@ -56,6 +60,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     paddingVertical: 10,
     width: '100%',
+    zIndex:50
   },
   filterButton: {
     alignItems: 'center',
