@@ -66,14 +66,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingTop:15
+    paddingTop:15,
+    paddingBottom:40,
   },
 
   /** Card actual */
   card: {
     position: 'relative',
     width: width * 0.85,
-    height: height * 0.90,
+    height: "100%",
     borderRadius: 40,
     backgroundColor: '#ddd',
     zIndex: 2,

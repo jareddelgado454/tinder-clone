@@ -23,16 +23,16 @@ export default function Modal() {
   if (!user) return <Text>User not found</Text>;
 
   const [expanded, setExpanded] = useState(true);
-  const panelHeight = useSharedValue(height * 0.6);
+  const panelHeight = useSharedValue(400);
 
   const togglePanel = () => {
     setExpanded(!expanded);
-    panelHeight.value = withTiming(expanded ? height * 0.2 : height * 0.6, { duration: 300 });
+    panelHeight.value = withTiming(expanded ? 200 : 400, { duration: 300 });
   };
 
   const panelAnimation = useAnimatedStyle(() => ({
     height: panelHeight.value,
-    top: expanded ? height * 0.5 - 25 : height * 0.85,
+    top: expanded ? height * 0.5 - 25 : height * 0.75,
   }));
 
   const imageAnimation = useAnimatedStyle(() => ({
@@ -139,7 +139,8 @@ export default function Modal() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    height:"100%",
+    backgroundColor: 'red',
   },
   image: {
     width: '100%',
@@ -225,6 +226,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 30,
     width: 300,
+    marginBottom:20,
   },
   circleButton: {
     width: 65,
