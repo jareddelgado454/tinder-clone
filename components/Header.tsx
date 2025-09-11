@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import Feather from '@expo/vector-icons/Feather';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 interface HeaderProps {
@@ -13,7 +14,7 @@ export default function Header({ onMenuPress, onFilterPress }: HeaderProps) {
         <Ionicons name="menu" size={28} color="#ffffffff" />
       </TouchableOpacity>
       <TouchableOpacity onPress={onFilterPress}>
-        <Ionicons name="filter" size={26} color="#ffffffff" />
+        <Feather name="filter" size={26} color="white" />
       </TouchableOpacity>
     </View>
   );
