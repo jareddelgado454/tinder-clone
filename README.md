@@ -92,5 +92,5 @@ npx expo start
 
 - Nombre: Jared Delgado  
 - Email: jared.delgado41@gmail.com  
-- GitHub: [tu-usuario](https://github.com/jareddelgado454)
+- GitHub: [Jared Delgado](https://github.com/jareddelgado454)
 

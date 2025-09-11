@@ -10,22 +10,19 @@ interface SidebarProps {
 export default function Sidebar({ onMenuPress }: SidebarProps) {
   return (
     <View style={styles.sidebar}>
-      {/* X en la esquina superior izquierda */}
       <TouchableOpacity style={styles.closeButton} onPress={onMenuPress}>
         <Fontisto name="close-a" size={22} color="white" />
       </TouchableOpacity>
 
-      {/* Perfil */}
       <View style={styles.profileContainer}>
         <Image
-          source={require('../assets/images/fotoPerfil.jpg')} // Asegúrate de tener esta imagen
+          source={require('../assets/images/fotoPerfil.jpg')}
           style={styles.profileImage}
         />
         <Text style={styles.profileName}>Jared, 26</Text>
         <Text style={styles.profileCity}>Miraflores</Text>
       </View>
 
-      {/* Opciones */}
       <View style={styles.menuItems}>
         <TouchableOpacity style={styles.item}>
           <Ionicons name="male-female" size={24} color="white" style={styles.itemIcon} />
@@ -63,7 +60,6 @@ export default function Sidebar({ onMenuPress }: SidebarProps) {
         </TouchableOpacity>
       </View>
 
-      {/* Cerrar sesión en la parte inferior */}
       <TouchableOpacity style={styles.logoutButton}>
         <MaterialCommunityIcons name="logout" size={22} color="white" style={styles.itemIcon}/>
         <Text style={styles.itemText}>Cerrar sesión</Text>
@@ -149,7 +145,7 @@ const styles = StyleSheet.create({
   logoutButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 50, // distancia desde las opciones
+    marginTop: 50, 
     paddingVertical: 15,
     paddingLeft:20
   },

@@ -28,7 +28,7 @@ export default function Modal() {
   if (!user) return <Text>User not found</Text>;
 
   const [expanded, setExpanded] = useState(true);
-  const panelHeight = useSharedValue(expanded ? height * 0.55 : 150); // altura inicial del panel
+  const panelHeight = useSharedValue(expanded ? height * 0.55 : 150); 
 
   const togglePanel = () => {
     setExpanded(!expanded);
@@ -61,10 +61,8 @@ export default function Modal() {
 
   return (
     <View style={styles.container}>
-      {/* Imagen de fondo */}
       <Animated.Image source={user.image} style={[styles.image, imageAnimation]} resizeMode="cover" />
 
-      {/* Botones sobre la imagen */}
       <View style={styles.topButtons}>
         <TouchableOpacity onPress={() => router.back()}>
           <Fontisto name="close-a" size={22} color="white" />
@@ -74,14 +72,12 @@ export default function Modal() {
         </TouchableOpacity>
       </View>
 
-      {/* Panel inferior */}
+
       <Animated.View style={[styles.detailPanel, panelAnimation]}>
-        {/* Botón para expandir/colapsar */}
         <TouchableOpacity style={styles.toggleButton} onPress={togglePanel}>
           <FontAwesome name={expanded ? 'angle-down' : 'angle-up'} size={35} color="#fff" />
         </TouchableOpacity>
 
-        {/* Contenido del panel */}
         <View style={styles.userInfo}>
           <Text style={styles.name}>{user.name} {user.lastName}, {user.age}</Text>
           <Text style={styles.location}>{user.location}</Text>
@@ -120,7 +116,6 @@ export default function Modal() {
             </>
           )}
 
-          {/* Botones de acción al final del contenido */}
           {expanded && (
             <View style={[styles.actionButtons, { marginTop: 20, paddingBottom: insets.bottom + 10 }]}>
               <TouchableOpacity onPress={() => handlePressChoice(-1)} style={[styles.circleButton, { backgroundColor: '#d0bfbf' }]}>

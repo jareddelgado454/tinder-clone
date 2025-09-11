@@ -1,4 +1,4 @@
-// contexts/ModalActionContext.tsx
+
 import React, { createContext, ReactNode, useContext, useState } from "react";
 
 type ActionType = -1 | 1 | "super" | null;

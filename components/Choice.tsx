@@ -33,7 +33,7 @@ export default function Choice({ type }: ChoiceProps) {
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    top: "35%", // Ajusta según el diseño
+    top: "35%",
     alignSelf: "center",
     justifyContent: "center",
     alignItems: "center",

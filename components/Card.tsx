@@ -9,7 +9,7 @@ const { width, height } = Dimensions.get('window');
 interface CardProps {
   name: string;
   age: number;
-  image: any; // require('../assets/images/user1.jpg')
+  image: any;
 }
 
 export default function Card({ name, age, image }: CardProps) {
