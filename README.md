@@ -1,50 +1,96 @@
-# Welcome to your Expo app 👋
+# Mobile Test App - React Native
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## 1. Descripción
+Aplicación móvil inspirada en Tinder, replicando el diseño y animaciones del prototipo de Figma:
 
-## Get started
+[Figma Prototype](https://www.figma.com/proto/VvIhHkdGfLYjEkU5y7s5CJ/Mobile-Test-App?node-id=1240-213&t=2In4vS3XEw8E8v5b-0&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1240%3A71)
 
-1. Install dependencies
+Esta app está desarrollada con **React Native** y **Expo**.  
+Todos los datos son **estáticos**, y se enfocó en replicar **colores, posiciones y animaciones** exactamente como en el prototipo.  
+Los elementos interactivos son funcionales, mientras que los demás son solo visuales.
 
-   ```bash
-   npm install
-   ```
+---
 
-2. Start the app
+## 2. Instalación
 
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+1. Clonar el repositorio:
 
 ```bash
-npm run reset-project
+git clone https://github.com/jareddelgado454/tinder-clone.git
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. Entrar a la carpeta del proyecto:
 
-## Learn more
+```bash
+cd tinder-clone
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+3. Instalar dependencias:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npm install
+# o si usas yarn
+yarn install
+```
 
-## Join the community
+4. Instalar Expo CLI (si no lo tienes):
 
-Join our community of developers creating universal apps.
+```bash
+npm install -g expo-cli
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
+
+## 3. Ejecutar la aplicación
+
+1. Iniciar Expo:
+
+```bash
+npx expo start
+```
+
+2. Elegir una opción para ejecutar la app:
+
+- **Android Emulator** (requiere Android Studio o dispositivo fisico se puede usar)  
+- **iOS Simulator** (requiere Xcode en macOS)  
+- **Dispositivo físico** usando **Expo Go** (escanea el QR)
+
+---
+
+## 4. Funcionalidades
+
+1. Swipe de tarjetas con animaciones:  
+   - **Like** (check)  
+   - **No** (X)  
+   - **Super Like** (corazón)
+
+2. Animaciones de tarjetas idénticas al prototipo de Figma  
+3. Botones y elementos interactivos funcionales  
+4. Compatibilidad con **Android e iOS**  
+5. Todos los datos son **estáticos**, sin conexión a API
+
+---
+
+## 5. Notas importantes
+
+1. Solo los elementos interactivos en el prototipo son funcionales  
+2. Se priorizó **precisión visual y animaciones** sobre contenido dinámico  
+3. No requiere conexión a internet ni API externa  
+
+---
+
+## 6. Requisitos del sistema
+
+1. Node.js >= 18  
+2. npm o yarn  
+3. Expo CLI (`npm install -g expo-cli`)  
+4. Android Studio (para emulador Android) o Xcode (para simulador iOS)
+
+---
+
+## 7. Autor
+
+- Nombre: Jared Delgado  
+- Email: jared.delgado41@gmail.com  
+- GitHub: [tu-usuario](https://github.com/jareddelgado454)
+
